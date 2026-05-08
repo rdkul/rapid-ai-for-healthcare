@@ -487,10 +487,22 @@ section.tight { padding: 2.5rem 0; }
    Responsive tweaks
 ---------------------------------------------------------------- */
 @media (max-width: 720px) {
+  .site-header .container { gap: 1rem; }
+  .brand { font-size: 0.78rem; }
   .nav-links { gap: 1.2rem; }
   .nav-links a { font-size: 0.74rem; }
   .hero { padding: 4rem 0 3rem; }
   section { padding: 3rem 0; }
   .container, .content { padding: 0 1.4rem; }
   pre { font-size: 0.78rem; padding: 1rem; }
+}
+
+@media (max-width: 560px) {
+  /* Hide the "/ HEALTHCARE + AI" descriptor on narrow phones to give
+     the nav links breathing room. Brand stays as just "RAHUL KULKARNI". */
+  .brand .accent { display: none; }
+  .brand { font-size: 0.74rem; }
+  .nav-links { gap: 0.9rem; }
+  .nav-links a { font-size: 0.7rem; letter-spacing: 0.03em; }
+  .site-header .container { padding-top: 0.85rem; padding-bottom: 0.85rem; }
 }
