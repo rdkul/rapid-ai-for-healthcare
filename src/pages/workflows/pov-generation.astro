@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="POV Generation"
+  description="Turn an initial thought into a complete Point of View — deck, memo, long-form post — in under 2 hours."
+  activeNav="workflows"
+>
+  <section class="workflow-hero">
+    <div class="container">
+      <div class="eyebrow">/ workflow · live</div>
+      <h1>POV Generation</h1>
+      <p class="hero-lede" style="max-width: 720px;">
+        A workflow that turns an initial thought into a complete Point of View — deck, memo, long-form post — in under 2 hours. Sharp, pharma-fluent.
+      </p>
+      <div class="tags">
+        <span class="tag">Deck</span>
+        <span class="tag">Memo</span>
+        <span class="tag">Long-form</span>
+      </div>
+      <div class="hero-cta">
+        <a href="#try-it" class="btn btn-primary">Try it yourself</a>
+        <a href="#case-study" class="btn btn-secondary">See a worked example</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div style="max-width: 760px;">
+        <p style="font-size: 1.15rem;">
+          Let AI give you a starting framework — considerations, structure, angles — so your time goes into shaping the thinking.
+        </p>
+
+        <div id="try-it" class="section-eyebrow" style="margin-top: 3.5rem;">Try it yourself</div>
+        <h2>Four steps. Two minutes to start.</h2>
+
+        <div class="phase">
+          <div class="phase-num">Step 01</div>
+          <h3>Get the engine prompt</h3>
+          <p>Download or copy <code>pov-engine.md</code> from the engine repo (link below).</p>
+        </div>
+
+        <div class="phase">
+          <div class="phase-num">Step 02</div>
+          <h3>Paste it into a fresh chat</h3>
+          <p>Use Claude or ChatGPT. For repeat use or to add your own source materials for richer context, set it up as a Claude Project — same prompt, persistent context.</p>
+        </div>
+
+        <div class="phase">
+          <div class="phase-num">Step 03</div>
+          <h3>Give it your starting point</h3>
+          <p>Topic, half-formed thoughts, open questions, constraints — whatever you've got.</p>
+        </div>
+
+        <div class="phase">
+          <div class="phase-num">Step 04</div>
+          <h3>Engage at two natural points</h3>
+          <p>First, the engine proposes a framing — confirm it or redirect. Second, it asks for context that would shape the working POV. Steer with what you know.</p>
+        </div>
+
+        <div style="border-left: 2px solid var(--accent); padding: 0.5rem 0 0.5rem 0.9rem; margin: 1.5rem 0 0.6rem;">
+          <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">
+            <span style="color: var(--accent); font-weight: 600;">💡 Where to run it —</span>
+            Best inside a tool that respects your data: Claude Enterprise or your firm's licensed deployment. Don't paste sensitive client material into consumer LLM products.
+          </p>
+        </div>
+
+        <div style="border-left: 2px solid var(--accent); padding: 0.5rem 0 0.5rem 0.9rem; margin: 0.6rem 0;">
+          <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">
+            <span style="color: var(--accent); font-weight: 600;">💡 Sharpen the output —</span>
+            Pair with your firm's internal materials (past POVs, ATU reads, brand intel). With one or two real anchors the recommendation gets noticeably sharper.
+          </p>
+        </div>
+
+        <div style="border-left: 2px solid var(--accent); padding: 0.5rem 0 0.5rem 0.9rem; margin: 0.6rem 0 1.5rem;">
+          <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">
+            <span style="color: var(--accent); font-weight: 600;">💡 For .pptx &amp; .docx files —</span>
+            Use a tool with file-creation: Cowork, Claude Code, or ChatGPT with Code Interpreter (free tier with limits; Plus/Pro for unlimited runs). In standard chat, you'll get final-form text to paste into PowerPoint and Word.
+          </p>
+        </div>
+
+        <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button type="button" class="btn btn-primary" data-engine-copy="/engines/pov-engine.md">Copy the engine prompt</button>
+          <a href="/engines/pov-engine.md" download class="btn btn-secondary">Or download the .md file</a>
+        </div>
+        <p style="margin-top: 0.8rem; font-size: 0.85rem; color: var(--text-muted);">
+          Copies the full prompt to your clipboard. Paste it into a fresh Claude or ChatGPT chat — the engine will greet you and ask for your brief.
+        </p>
+
+        <div class="section-eyebrow" style="margin-top: 4rem;">What you'll experience</div>
+        <h2>From an initial thought to a well-framed Point of View.</h2>
+
+        <div class="phase">
+          <div class="phase-num">You give</div>
+          <h3>Your starting point</h3>
+          <p>A topic, half-formed thoughts, open questions, any constraints. No need to clean it up.</p>
+        </div>
+
+        <div class="phase">
+          <div class="phase-num">The engine works</div>
+          <h3>~2 hours total · ~15 minutes from you</h3>
+          <p>The engine clarifies the framing, drives through research, drafts every section, sketches a framework diagram and chart, and self-flags weaknesses. You step in at two natural points — confirming framing, then shaping direction with context — for about 15 minutes total.</p>
+        </div>
+
+        <div class="phase">
+          <div class="phase-num">You get</div>
+          <h3>Three deliverables and a wrap</h3>
+          <p>A complete 5–8 slide deck — with the first slide engineered to stand alone, in case that's all your audience sees. A 1-page memo for the client room. A long-form post for public/portfolio use. Plus a wrap that names what you should be ready to defend and the questions you'll likely face.</p>
+        </div>
+
+        <div id="case-study" class="section-eyebrow" style="margin-top: 4rem;">Worked example</div>
+        <h2>$1B specialty inflammation biologic, biosimilar defense.</h2>
+        <p>
+          A working POV produced by the engine in ~75 minutes from an initial brief. The decision question: <em>How should this $1B specialty inflammation biologic defend its franchise over the next 18 months — given biosimilar entry in 12 months, an adjacent indication launching in 6 months, and uncertain durability of prescriber loyalty under payer pressure?</em>
+        </p>
+        <p>
+          Recommendation: run a 3-track sequenced defense — Defend (patient retention) / Shift (commercial weight to the adjacent launch) / Preserve (loyalty + payer access) — with stage-gates at months 3, 6, 12. $35–55M redeployment, fully self-funded from established-indication HCP and DTC spend. Adjacent launch stays fully funded. Holds 60–70% of patient volume through biosimilar entry — Humira benchmark.
+        </p>
+        <p class="muted" style="font-size: 0.95rem;">
+          Output included a 7-slide leadership deck with action titles, a leave-behind memo with SCR opening, a long-form post, framework diagram, industry analog chart, budget redeployment table, and a wrap with what to defend + likely senior-leadership Q&amp;A.
+        </p>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem;">
+          <a href="/examples/inflammation-biologic-defense-longform.html" target="_blank" class="btn btn-primary">Read the long-form post →</a>
+          <a href="/examples/inflammation-biologic-defense-deck.pptx" class="btn btn-secondary">Download the deck (.pptx)</a>
+          <a href="/examples/inflammation-biologic-defense-memo.docx" class="btn btn-secondary">Download the memo (.docx)</a>
+        </div>
+
+        <div style="border-left: 2px solid var(--accent); padding: 0.6rem 0 0.6rem 0.9rem; margin: 1.6rem 0 0.6rem;">
+          <p style="margin: 0; font-size: 0.95rem; color: var(--text);">
+            The artifacts above came from a real run of the engine on a fictional brief — no additional files or data provided, just brief direction given when the engine asked for clarifications. <span style="color: var(--accent); font-weight: 600;">Want to talk through how this would apply to your franchise?</span>
+            <a href="mailto:raulkulkarni@gmail.com?subject=POV%20engine%20%E2%80%94%20applying%20it%20to%20our%20work" style="color: var(--accent); font-weight: 600;">Start a conversation →</a>
+          </p>
+        </div>
+
+        <p style="margin: 0.4rem 0 0; font-size: 0.82rem; color: var(--text-muted); font-style: italic;">
+          Worked example, fictional brand. Numbers are directional, drawn from public benchmarks (Humira, Stelara, Remicade 10-Ks and analyst tracking). Not representative of any past or current client engagement.
+        </p>
+
+        <div class="section-eyebrow" style="margin-top: 4rem;">Design principles</div>
+
+        <div class="principle-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <div class="principle">
+            <h4>Helps initiate</h4>
+            <p>An initial thought is enough to begin. The engine takes you from idea to discussion-ready quickly — so you can start the right conversations sooner, not wait until everything is figured out.</p>
+          </div>
+          <div class="principle">
+            <h4>Shapes your thinking</h4>
+            <p>Outputs come as packaged narratives — deck, memo, long-form post — with sources cited inline. Not just deliverables to hand off; they shape your thinking and give you something to build your own narrative on top of.</p>
+          </div>
+          <div class="principle">
+            <h4>Speeds the cycle</h4>
+            <p>Each POV gives you ready material to take into conversations and meetings. Sound out ideas, get feedback, evolve the position — faster than starting from scratch each round.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="content" style="text-align: center; padding: 3rem 0 4rem;">
+      <h3 style="font-style: italic; font-size: 1.6rem;">Used it and liked what you saw?</h3>
+      <p class="muted" style="margin: 1.5rem auto; max-width: 560px;">
+        Curious how it landed for you. If you were able to adapt it for your team's voice, integrate with internal materials, or if it just sparked an idea, would love to know — let's chat.
+      </p>
+      <a href="mailto:raulkulkarni@gmail.com" class="btn btn-primary" style="margin-top: 1rem;">Start a conversation →</a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,198 @@
+---
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  activeNav?: 'home' | 'workflows' | 'about';
+}
+
+const {
+  title = 'Rapid AI for Healthcare',
+  description = 'AI workflows for healthcare commercial — built by a consultant who knows what good looks like.',
+  activeNav = 'home',
+} = Astro.props;
+
+const fullTitle = title === 'Rapid AI for Healthcare' ? title : `${title} · Rapid AI for Healthcare`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <a href="/" class="brand">
+          RAHUL KULKARNI <span class="accent">/ HEALTHCARE + AI</span>
+        </a>
+        <nav>
+          <ul class="nav-links">
+            <li><a href="/" class={activeNav === 'home' ? 'active' : ''}>Home</a></li>
+            <li><a href="/workflows" class={activeNav === 'workflows' ? 'active' : ''}>Workflows</a></li>
+            <li><a href="/about" class={activeNav === 'about' ? 'active' : ''}>About</a></li>
+            <li><a href="mailto:raulkulkarni@gmail.com">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer" id="contact">
+      <div class="container">
+        <div>
+          Applied AI for healthcare · 2026
+        </div>
+        <ul class="footer-links">
+          <li><a href="mailto:raulkulkarni@gmail.com">Email</a></li>
+          <li><a href="https://www.linkedin.com/in/rahul-kulkarni-35342417" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <script is:inline>
+      // Copy-to-clipboard for engine prompts.
+      // Hooks any button with data-engine-copy="<url>".
+      // Pre-fetches engine text on page load so the click handler has it synchronously
+      // (avoids consuming the user-gesture token across an await).
+      // Falls back to document.execCommand('copy') if the modern Clipboard API fails.
+      (function () {
+        const cache = new Map();
+        const inflight = new Map();
+
+        function fetchEngine(url) {
+          if (cache.has(url)) return Promise.resolve(cache.get(url));
+          if (inflight.has(url)) return inflight.get(url);
+          const p = fetch(url)
+            .then(function (r) {
+              if (!r.ok) throw new Error('HTTP ' + r.status);
+              return r.text();
+            })
+            .then(function (text) { cache.set(url, text); inflight.delete(url); return text; })
+            .catch(function (err) { inflight.delete(url); throw err; });
+          inflight.set(url, p);
+          return p;
+        }
+
+        function legacyCopy(text) {
+          try {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            ta.style.top = '0';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            ta.setSelectionRange(0, text.length);
+            const ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+            return ok;
+          } catch (e) {
+            return false;
+          }
+        }
+
+        function showSuccess(btn, original) {
+          btn.textContent = '✓ Copied — paste into Claude / ChatGPT';
+          btn.setAttribute('data-copied', 'true');
+          setTimeout(function () {
+            btn.textContent = original;
+            btn.removeAttribute('data-copied');
+          }, 3000);
+        }
+
+        function showFailure(btn, original) {
+          btn.textContent = 'Copy failed — try the download instead';
+          setTimeout(function () { btn.textContent = original; }, 3000);
+        }
+
+        function performCopy(btn, text, original) {
+          // Try modern Clipboard API first
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(
+              function () { showSuccess(btn, original); },
+              function () {
+                // Modern API rejected — try legacy fallback
+                if (legacyCopy(text)) showSuccess(btn, original);
+                else showFailure(btn, original);
+              }
+            );
+          } else {
+            // No modern API available
+            if (legacyCopy(text)) showSuccess(btn, original);
+            else showFailure(btn, original);
+          }
+        }
+
+        // Pre-fetch on page load so click handler has text synchronously
+        function prefetch() {
+          const buttons = document.querySelectorAll('[data-engine-copy]');
+          buttons.forEach(function (btn) {
+            const url = btn.getAttribute('data-engine-copy');
+            fetchEngine(url).catch(function (e) {
+              console.warn('Pre-fetch of engine failed:', url, e);
+            });
+          });
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', prefetch);
+        } else {
+          prefetch();
+        }
+
+        // Click handler
+        document.addEventListener('click', function (e) {
+          const btn = e.target.closest('[data-engine-copy]');
+          if (!btn) return;
+          e.preventDefault();
+          const url = btn.getAttribute('data-engine-copy');
+          const original = btn.textContent;
+
+          if (cache.has(url)) {
+            // Synchronous path — clipboard write within user gesture
+            performCopy(btn, cache.get(url), original);
+          } else {
+            // Cache miss — fetch and copy. Less reliable timing, but works in most browsers.
+            btn.textContent = 'Loading…';
+            fetchEngine(url).then(
+              function (text) {
+                btn.textContent = original;
+                performCopy(btn, text, original);
+              },
+              function () {
+                btn.textContent = original;
+                showFailure(btn, original);
+              }
+            );
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

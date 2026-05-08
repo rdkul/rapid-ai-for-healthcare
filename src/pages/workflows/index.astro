@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WorkflowCard from '../../components/WorkflowCard.astro';
+---
+
+<BaseLayout
+  title="Workflows"
+  description="A growing library of AI workflows for healthcare commercial. Rapid POVs, measurement, patient analytics, brand strategy."
+  activeNav="workflows"
+>
+  <section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+      <div class="section-eyebrow">AI Workflows</div>
+      <h1 style="font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 1rem;">
+        Made for the <span class="italic">next conversation</span>.
+      </h1>
+      <p class="hero-lede" style="max-width: 720px;">
+        Each one a working system, designed for a specific moment in healthcare commercial — ramping on a new therapy, turning an initial thought into a working POV, taking a sharp idea into a stakeholder's hands. Pharma-fluent. Built in public.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-eyebrow" style="margin-bottom: 1.4rem;">Live</div>
+      <div class="workflow-grid" style="margin-bottom: 4rem;">
+        <WorkflowCard
+          status="live"
+          title="Disease Research"
+          description="Learning about a new disease area or therapy; lots of scattered sources online? This engine brings publicly available research to your fingertips in under 10 minutes — confidence-flagged sources, paths to validate, and a print-ready brief for quick prep."
+          href="/workflows/disease-research"
+          meta={["At a glance", "Sourced", "Print-ready"]}
+        />
+        <WorkflowCard
+          status="live"
+          title="POV Generation"
+          description="Pulling through a working point of view to engage your stakeholders and bring them to a whiteboard? This engine takes a messy brief and produces a complete deck, memo, and long-form post in under 2 hours. Sharp, pharma-fluent."
+          href="/workflows/pov-generation"
+          meta={["Deck", "Memo", "Long-form"]}
+        />
+      </div>
+
+      <div class="section-eyebrow" style="margin-bottom: 1.4rem;">More in motion</div>
+      <p class="muted" style="max-width: 640px; margin-bottom: 1.6rem; font-size: 1.02rem;">
+        Exploring four more directions — sharing each as it takes shape.
+      </p>
+      <div class="workflow-grid">
+        <WorkflowCard
+          status="in-motion"
+          title="Analytics"
+          description="Analytics in the vibe-coding era — what happens when the chart you need is the prompt you write?"
+          meta={["Exploring"]}
+        />
+        <WorkflowCard
+          status="in-motion"
+          title="Interactive flows"
+          description="Are interactive visuals simplifying — or just stacking more layers? Working out where they actually help."
+          meta={["Exploring"]}
+        />
+        <WorkflowCard
+          status="in-motion"
+          title="Reimagined storytelling"
+          description="There's a medium somewhere between the PowerPoint and the IMAX 70mm. Looking for it."
+          meta={["Exploring"]}
+        />
+        <WorkflowCard
+          status="in-motion"
+          title="Digital experience"
+          description="How do you put experience first — and tie it to the tech that actually delivers the business outcome?"
+          meta={["Exploring"]}
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="content" style="text-align: center; padding: 2rem 0 3rem;">
+      <p class="muted" style="max-width: 540px; margin: 0 auto 1.5rem;">
+        Got a thought, a counter, or a <em>have you tried this</em>? Would love to hear it.
+      </p>
+      <a href="mailto:raulkulkarni@gmail.com" class="btn btn-primary">Start a conversation →</a>
+    </div>
+  </section>
+</BaseLayout>

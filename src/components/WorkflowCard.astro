@@ -1,0 +1,35 @@
+---
+export interface Props {
+  status: 'live' | 'in-development' | 'planned' | 'in-motion';
+  title: string;
+  description: string;
+  href?: string;
+  meta?: string[];
+}
+
+const { status, title, description, href, meta = [] } = Astro.props;
+
+const statusLabel = {
+  live: 'Live',
+  'in-development': 'In Development',
+  planned: 'Planned',
+  'in-motion': 'In Motion',
+}[status];
+
+const isComingSoon = status !== 'live';
+const Tag = href && !isComingSoon ? 'a' : 'div';
+---
+
+<Tag
+  href={href}
+  class={`workflow-card ${isComingSoon ? 'coming-soon' : ''}`}
+>
+  <div class="status">{statusLabel}</div>
+  <h3>{title}</h3>
+  <p class="desc">{description}</p>
+  {meta.length > 0 && (
+    <div class="meta">
+      {meta.map((item) => <span>{item}</span>)}
+    </div>
+  )}
+</Tag>

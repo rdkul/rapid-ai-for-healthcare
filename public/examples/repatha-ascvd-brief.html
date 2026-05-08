@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brief: Repatha in ASCVD · Rapid D&amp;D Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #141414;
+      --bg-elev: #1a1a1a;
+      --bg-tile: #181818;
+      --border: #1f1f1f;
+      --border-strong: #2a2a2a;
+      --text: #f5f5f5;
+      --text-muted: #a0a0a0;
+      --text-dim: #707070;
+      --accent: #c8ff3f;
+      --accent-soft: rgba(200, 255, 63, 0.08);
+      --accent-bg: rgba(200, 255, 63, 0.05);
+      --hb-high: #c8ff3f;
+      --hb-med: #f5c842;
+      --hb-low: #ff7a59;
+      --font-serif: 'Fraunces', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Unified column grid for all kv-grid sections (Snapshot, Disease/Drug glance, Payer) */
+      --kv-label-col: 220px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 17px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 48px 96px;
+    }
+
+    /* Header */
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.6rem, 5.5vw, 4rem);
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      margin: 0 0 22px;
+    }
+    h1 em { color: var(--accent); font-style: italic; }
+    h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 1.85rem;
+      letter-spacing: -0.015em;
+      margin: 0 0 24px;
+    }
+    h3 {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 28px 0 12px;
+    }
+    h3:first-child { margin-top: 0; }
+    .legend {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .legend .hb { font-size: 0.95rem; }
+    .hb { display: inline-block; font-weight: 700; }
+    .hb-high { color: var(--hb-high); }
+    .hb-med  { color: var(--hb-med); }
+    .hb-low  { color: var(--hb-low); }
+
+    /* Cards */
+    section.card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 40px 44px;
+      margin-bottom: 24px;
+    }
+    section.card:last-of-type { margin-bottom: 0; }
+
+    /* Unified kv-grid — used in Snapshot, Disease at a glance, Drug at a glance, Payer */
+    .kv-grid {
+      display: grid;
+      grid-template-columns: var(--kv-label-col) 1fr;
+      gap: 0;
+      margin: 0;
+    }
+    .kv-grid dt {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 18px 24px 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .kv-grid dd {
+      font-size: 1rem;
+      padding: 18px 0;
+      margin: 0;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.55;
+    }
+    .kv-grid dt:last-of-type, .kv-grid dd:last-of-type { border-bottom: none; }
+
+    /* Source pill — placed inline, hyperlinked when URL is verified */
+    .src {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--text-dim);
+      transition: color 0.15s ease, border-color 0.15s ease;
+      margin-left: 6px;
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+    a.src:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    span.src { border-bottom: none; }
+    .src .hb { font-size: 0.95em; vertical-align: -1px; margin-left: 3px; }
+
+    /* Performance — big number tiles */
+    .perf-headline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+    .big-num {
+      background: var(--accent-soft);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 28px 28px 22px;
+    }
+    .big-num .num {
+      font-family: var(--font-serif);
+      font-size: 3rem;
+      font-weight: 500;
+      color: var(--accent);
+      line-height: 1;
+      letter-spacing: -0.025em;
+    }
+    .big-num .label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 14px;
+    }
+
+    /* Bar chart — pure CSS revenue trajectory */
+    .bar-chart { margin: 24px 0 12px; }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 100px 140px;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .bar-row:last-child { border-bottom: none; }
+    .bar-row .bar-year {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .bar-row .bar-track {
+      background: var(--bg-elev);
+      height: 28px;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .bar-row .bar-fill {
+      background: linear-gradient(90deg, var(--accent) 0%, rgba(200, 255, 63, 0.6) 100%);
+      height: 100%;
+      border-radius: 4px;
+    }
+    .bar-row .bar-fill.dim {
+      background: linear-gradient(90deg, var(--accent-dim, #8bb52a) 0%, rgba(139, 181, 42, 0.4) 100%);
+      opacity: 0.5;
+    }
+    .bar-row .bar-value {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 0.95rem;
+      text-align: right;
+    }
+    .bar-row .bar-yoy {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    /* Standard of care flowchart */
+    .flowchart {
+      display: flex;
+      align-items: stretch;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 14px 0;
+    }
+    .flow-box {
+      flex: 1;
+      min-width: 180px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 18px 20px;
+      text-align: center;
+      font-weight: 500;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .flow-arrow {
+      display: flex;
+      align-items: center;
+      color: var(--accent);
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    .flow-source {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+      text-align: right;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      margin: 12px 0 0;
+    }
+    th {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-strong);
+      font-weight: 500;
+    }
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .lead-row { background: var(--accent-soft); }
+    .lead-row td { font-weight: 500; }
+
+    .callout {
+      font-size: 1rem;
+      color: var(--text-muted);
+      border-left: 3px solid var(--accent);
+      padding: 6px 0 6px 20px;
+      margin: 28px 0 0;
+      line-height: 1.6;
+    }
+
+    /* Bullets and lists */
+    ul.tight, ol.tight {
+      margin: 8px 0 0;
+      padding-left: 24px;
+    }
+    ul.tight li, ol.tight li { margin-bottom: 10px; line-height: 1.55; }
+
+    /* Calendar / timeline */
+    .calendar {
+      margin: 8px 0 0;
+    }
+    .cal-year {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 24px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cal-year:last-child { border-bottom: none; }
+    .cal-year h4 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin: 0;
+      color: var(--accent);
+    }
+    .cal-events { margin: 0; padding: 0; list-style: none; }
+    .cal-events li {
+      padding: 6px 0 6px 22px;
+      position: relative;
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+    .cal-events li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 13px;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+    }
+    .cal-events li.past::before { background: var(--accent); }
+    .cal-events li.future::before { background: transparent; border: 2px solid var(--accent); }
+    .cal-events .month {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-right: 10px;
+      display: inline-block;
+      min-width: 60px;
+    }
+    .watch-focus {
+      background: var(--accent-bg);
+      border-left: 3px solid var(--accent);
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      border-radius: 4px;
+    }
+    .watch-focus h4 {
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 12px;
+    }
+    .watch-focus ul { margin: 0; padding-left: 22px; }
+    .watch-focus li { margin-bottom: 6px; line-height: 1.5; }
+
+    /* Validation card */
+    .validation {
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+      border-radius: 14px;
+    }
+    .validation h2 { color: var(--accent); }
+    .validation ol { padding-left: 26px; margin: 0; }
+    .validation ol li { margin-bottom: 14px; line-height: 1.55; }
+
+    /* Threats inline list */
+    .threats { margin-top: 32px; }
+    .threats h3 { color: var(--hb-med); }
+
+    footer {
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 720px) {
+      .container { padding: 36px 24px 64px; }
+      :root { --kv-label-col: 140px; }
+      section.card { padding: 28px 24px; }
+      .perf-headline { gap: 14px; }
+      .big-num { padding: 22px 20px 16px; }
+      .big-num .num { font-size: 2.4rem; }
+      .bar-row { grid-template-columns: 50px 1fr 80px; }
+      .bar-row .bar-yoy { display: none; }
+      .cal-year { grid-template-columns: 70px 1fr; gap: 14px; }
+      .flowchart { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); }
+    }
+
+    /* Print */
+    @media print {
+      body { background: white; color: #111; font-size: 11pt; }
+      .container { padding: 0; max-width: 100%; }
+      section.card { background: white; border: 1px solid #ccc; page-break-inside: avoid; padding: 24px; margin-bottom: 16px; }
+      .big-num { background: #f7fbe6; border-color: #ccc; }
+      .big-num .num, h1 em, .hb-high, .cal-events li.past::before, .eyebrow { color: #5a8c00; }
+      .hb-med { color: #b8860b; }
+      .hb-low { color: #c4452f; }
+      h1, h2 { color: #111; }
+      .flow-box { background: #fafafa; border-color: #ccc; }
+      .bar-track { background: #eee; }
+      .bar-fill { background: #c8ff3f; }
+      .validation, .accent-bg, .watch-focus { background: #f7fbe6; border-color: #aacc44; }
+      .src, h3, .legend, .text-muted { color: #555 !important; }
+      .src { border-bottom-color: #aaa; }
+      footer { color: #888; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="eyebrow">Rapid D&amp;D Engine · Combined Brief</div>
+    <h1>Brief: <em>Repatha</em> in ASCVD</h1>
+    <p class="legend">Confidence: <span class="hb hb-high">●</span> High (primary, recent) · <span class="hb hb-med">◐</span> Medium (secondary or estimate) · <span class="hb hb-low">○</span> Low (directional)</p>
+
+    <!-- SNAPSHOT — pure executive summary, no overlap with deeper cards -->
+    <section class="card">
+      <h2>Snapshot</h2>
+      <dl class="kv-grid">
+        <dt>Drug</dt>
+        <dd>Repatha (evolocumab) · Amgen · PCSK9 monoclonal antibody</dd>
+        <dt>Indication</dt>
+        <dd>Hypercholesterolemia · primary &amp; secondary CV prevention · HoFH</dd>
+        <dt>Position</dt>
+        <dd>3L for most ASCVD · 2L for statin-intolerant · 1L candidate for high-risk primary prevention</dd>
+        <dt>Top competitor</dt>
+        <dd>Leqvio (inclisiran) — twice-yearly siRNA, gaining on dosing convenience</dd>
+        <dt>Latest material event</dt>
+        <dd>Aug 2025 · FDA primary prevention label expansion <a class="src" href="https://www.fda.gov/drugs" target="_blank">[FDA <span class="hb hb-high">●</span>]</a></dd>
+        <dt>Watch next</dt>
+        <dd>Enlicitide (Merck oral PCSK9) Phase 3 readout — binary class event</dd>
+      </dl>
+    </section>
+
+    <!-- DISEASE AT A GLANCE — all unique disease context, with SoC flowchart -->
+    <section class="card">
+      <h2>Disease at a glance</h2>
+      <dl class="kv-grid">
+        <dt>Population</dt>
+        <dd>~19.9M US adults with ASCVD <span class="src">[NHANES / JAHA 2024 <span class="hb hb-high">●</span>]</span></dd>
+        <dt>Burden</dt>
+        <dd>Leading cause of US death · ~75% of MI / stroke events occur as first-time events <a class="src" href="https://www.heart.org/en/about-us/heart-and-stroke-association-statistics" target="_blank">[AHA <span class="hb hb-high">●</span>]</a></dd>
+        <dt>Treatment goal</dt>
+        <dd>LDL-C &lt;70 mg/dL for ASCVD; only 24.7% of patients achieving target <span class="src">[JACC CV Statistics 2026 <span class="hb hb-high">●</span>]</span></dd>
+      </dl>
+
+      <h3>Standard of care sequence</h3>
+      <div class="flowchart">
+        <div class="flow-box">High-intensity statin</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">Ezetimibe</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">PCSK9i / Bempedoic acid</div>
+      </div>
+      <p class="flow-source"><a class="src" href="https://www.acc.org/guidelines" target="_blank">Source: AHA/ACC 2018 Cholesterol Guidelines + 2022 ACC ECDP <span class="hb hb-high">●</span></a></p>
+    </section>
+
+    <!-- DRUG AT A GLANCE — unique drug context (MoA, dosing, label, key trials) -->
+    <section class="card">
+      <h2>Drug at a glance</h2>
+      <dl class="kv-grid">
+        <dt>Mechanism</dt>
+        <dd>Fully human IgG2 mAb · binds circulating PCSK9 · prevents LDL-receptor degradation · increases hepatic LDL clearance</dd>
+        <dt>Efficacy headline</dt>
+        <dd>~60% LDL-C reduction on top of statin <a class="src" href="https://www.nejm.org/doi/full/10.1056/NEJMoa1615664" target="_blank">[FOURIER 2017 <span class="hb hb-high">●</span>]</a></dd>
+        <dt>Dosing</dt>
+        <dd>140 mg SC Q2W or 420 mg SC monthly · prefilled autoinjector (Pushtronex on-body for monthly)</dd>
+        <dt>Label history</dt>
+        <dd>2015 (initial approval) · 2017 (CV risk reduction) · 2025 (primary prevention expansion, HoFH monotherapy) <a class="src" href="https://www.fda.gov/drugs" target="_blank">[FDA <span class="hb hb-high">●</span>]</a></dd>
+        <dt>Pivotal trials</dt>
+        <dd><strong>FOURIER</strong> (2017) · secondary prevention CV outcomes &nbsp;·&nbsp; <strong>VESALIUS-CV</strong> (2025) · 25% MACE reduction in primary prevention <span class="src">[NEJM <span class="hb hb-high">●</span>]</span></dd>
+        <dt>Warnings</dt>
+        <dd>No boxed warnings · injection-site reactions and rare hypersensitivity</dd>
+      </dl>
+    </section>
+
+    <!-- PERFORMANCE — big numbers, bar chart, drivers -->
+    <section class="card">
+      <h2>Performance</h2>
+
+      <div class="perf-headline">
+        <div class="big-num"><div class="num">$2.18B</div><span class="label">US revenue · 2025</span></div>
+        <div class="big-num"><div class="num">$3.02B</div><span class="label">Global revenue · 2025</span></div>
+        <div class="big-num"><div class="num">+36%</div><span class="label">YoY growth</span></div>
+      </div>
+
+      <h3>Global revenue trajectory</h3>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <span class="bar-year">2025</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 100%"></div></div>
+          <span class="bar-value">$3.02B</span>
+          <span class="bar-yoy">+36% YoY</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-year">2024</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 73.5%"></div></div>
+          <span class="bar-value">$2.22B</span>
+          <span class="bar-yoy">+36% YoY</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-year">2023</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 51.7%"></div></div>
+          <span class="bar-value">$1.56B</span>
+          <span class="bar-yoy">+43% YoY</span>
+        </div>
+      </div>
+      <p class="flow-source"><a class="src" href="https://www.amgen.com/investors" target="_blank">Sources: Amgen Q4 2025, 10-K 2024, 10-K 2023 <span class="hb hb-high">●</span></a></p>
+
+      <p class="callout">Growth driven by expanded payer access (~96% US lives covered), the August 2025 primary-prevention label opening a new addressable pool, and AmgenNow direct-to-patient cash program at $239/month launched October 2025.</p>
+    </section>
+
+    <!-- POSITIONING & COMPETITION — combines drug's role + competitive table + threats -->
+    <section class="card">
+      <h2>Positioning &amp; competition</h2>
+
+      <h3>Where Repatha sits</h3>
+      <p style="margin-top: 0;">3L for most ASCVD patients (post statin + ezetimibe). 2L for statin-intolerant. 1L candidate for high-risk primary prevention post the August 2025 label expansion.</p>
+
+      <h3>Differentiation</h3>
+      <ul class="tight">
+        <li>Only PCSK9i with both primary <em>and</em> secondary prevention CV outcomes data <a class="src" href="https://www.fda.gov/drugs" target="_blank">[FDA label <span class="hb hb-high">●</span>]</a></li>
+        <li>Largest evidence breadth in class · 5M+ patient exposures globally <a class="src" href="https://www.amgen.com/" target="_blank">[Amgen <span class="hb hb-high">●</span>]</a></li>
+        <li>~60% LDL-C reduction on top of statin — strongest in the mAb subclass <a class="src" href="https://www.nejm.org/doi/full/10.1056/NEJMoa1615664" target="_blank">[FOURIER <span class="hb hb-high">●</span>]</a></li>
+      </ul>
+
+      <h3>Competitive landscape</h3>
+      <table>
+        <thead>
+          <tr><th>Brand</th><th>Class</th><th>LDL reduction</th><th>Dosing</th><th>Notable</th></tr>
+        </thead>
+        <tbody>
+          <tr class="lead-row"><td>Repatha</td><td>mAb</td><td class="num">~60%</td><td>SC Q2W / Monthly</td><td>Class leader, broadest evidence</td></tr>
+          <tr><td>Praluent</td><td>mAb</td><td class="num">~55–60%</td><td>SC Q2W</td><td>Trailing volume; comparable mechanism</td></tr>
+          <tr><td>Leqvio</td><td>siRNA</td><td class="num">~50%</td><td>SC twice-yearly</td><td>Gaining on dosing convenience</td></tr>
+          <tr><td>Bempedoic acid</td><td>Oral non-statin</td><td class="num">~17–20%</td><td>Oral daily</td><td>Used pre-PCSK9i in mild cases</td></tr>
+        </tbody>
+      </table>
+      <p class="flow-source">Class share split: Repatha + Praluent together ~70% of class revenue <span class="src">[Intel Market Research <span class="hb hb-med">◐</span> — validate with sales data (e.g., IQVIA NSP, Symphony) or claims data (e.g., Komodo)]</span></p>
+
+      <div class="threats">
+        <h3>Pipeline threats</h3>
+        <ul class="tight">
+          <li><strong>Enlicitide (Merck, MK-0616)</strong> — oral PCSK9, Phase 3 CORALreef ongoing. Oral dosing pressures the entire injectable PCSK9 class. <a class="src" href="https://www.merck.com/research-pipeline/" target="_blank">[Merck <span class="hb hb-high">●</span>]</a></li>
+          <li><strong>Lerodalcibep (LIB Therapeutics)</strong> — completed Phase 3 LIBerate Nov 2025; monthly dosing claims. <span class="src">[LIB Therapeutics <span class="hb hb-med">◐</span> — confirm at upcoming CV congresses]</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PAYER & ACCESS — keep clean, well-sourced, aligned -->
+    <section class="card">
+      <h2>Payer &amp; access</h2>
+      <dl class="kv-grid">
+        <dt>Coverage</dt>
+        <dd>~96% US lives covered <a class="src" href="https://www.amgen.com/investors" target="_blank">[Amgen Investor Day 2025 <span class="hb hb-high">●</span>]</a></dd>
+        <dt>Patient OOP</dt>
+        <dd>~88% of commercial scripts cost ≤$50/month <a class="src" href="https://www.amgen.com/" target="_blank">[Amgen / IQVIA claims 2024 <span class="hb hb-high">●</span>]</a></dd>
+        <dt>WAC</dt>
+        <dd>~$573/month (~$6,870/year) · AmgenNow cash program at $239/month <a class="src" href="https://www.amgen.com/" target="_blank">[Amgen <span class="hb hb-high">●</span>]</a></dd>
+        <dt>PA dynamics</dt>
+        <dd>Specialist-only requirements being removed across major commercial plans through 2025 <span class="src">[industry policy disclosures <span class="hb hb-med">◐</span> — validate with payer data (e.g., MMIT, AnalySource) or your firm's payer relations team]</span></dd>
+      </dl>
+    </section>
+
+    <!-- CALENDAR — past events + future watch items in a year-grouped timeline -->
+    <section class="card">
+      <h2>Calendar</h2>
+
+      <div class="watch-focus">
+        <h4>Watch focus · next 6–12 months</h4>
+        <ul>
+          <li><strong>Enlicitide Phase 3 readouts</strong> — binary competitive event for the injectable PCSK9 class</li>
+          <li><strong>Payer PA response to VESALIUS-CV</strong> — speed of criteria loosening for primary prevention</li>
+          <li><strong>PCP vs cardiology Rx mix shift</strong> — proxy for whether the primary-prevention TAM converts</li>
+        </ul>
+      </div>
+
+      <div class="calendar">
+        <div class="cal-year">
+          <h4>2025</h4>
+          <ul class="cal-events">
+            <li class="past"><span class="month">Aug</span>FDA primary prevention label expansion <a class="src" href="https://www.fda.gov/drugs" target="_blank">[FDA <span class="hb hb-high">●</span>]</a></li>
+            <li class="past"><span class="month">Oct</span>AmgenNow direct-to-patient launched at $239/month <a class="src" href="https://www.amgen.com/" target="_blank">[Amgen <span class="hb hb-high">●</span>]</a></li>
+            <li class="past"><span class="month">Nov</span>VESALIUS-CV readout · 25% MACE reduction in primary prevention <span class="src">[Bohula et al., NEJM <span class="hb hb-high">●</span>]</span></li>
+          </ul>
+        </div>
+        <div class="cal-year">
+          <h4>2026</h4>
+          <ul class="cal-events">
+            <li class="future"><span class="month">Expected</span>Enlicitide Phase 3 readouts · Merck oral PCSK9 (binary class event)</li>
+          </ul>
+        </div>
+        <div class="cal-year">
+          <h4>2026–27</h4>
+          <ul class="cal-events">
+            <li class="future"><span class="month">Expected</span>AHA/ACC cholesterol guideline refresh incorporating VESALIUS-CV <span class="src">[<span class="hb hb-low">○</span> — confirm with KOL interviews or guideline-committee tracking]</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALIDATION PRIORITIES -->
+    <section class="card validation">
+      <h2>Validation priorities</h2>
+      <ol>
+        <li><strong>Class share splits</strong> across Repatha / Praluent / Leqvio for H2 2025 — pull <em>sales data</em> (e.g., IQVIA NSP, Xponent) or <em>claims-based prescriber analytics</em> (e.g., Symphony, Komodo). Current numbers are analyst-derived.</li>
+        <li><strong>PCP vs cardiology prescriber mix</strong> post the Aug 2025 label expansion — check Amgen field force trackers or run <em>claims data</em> pull (e.g., Komodo, Optum).</li>
+        <li><strong>Payer formulary movement</strong> on primary-prevention criteria — pull <em>payer/formulary data</em> (e.g., MMIT, AnalySource) or talk to your firm's payer relations practice.</li>
+      </ol>
+    </section>
+
+    <footer>
+      Generated by the Rapid D&amp;D Engine · v0.6
+    </footer>
+  </div>
+</body>
+</html>

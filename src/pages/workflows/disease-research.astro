@@ -1,0 +1,138 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Disease Research"
+  description="From a disease, drug, or both to a sourced, at-a-glance briefing in under 10 minutes."
+  activeNav="workflows"
+>
+  <section class="workflow-hero">
+    <div class="container">
+      <div class="eyebrow">/ workflow · live</div>
+      <h1>Disease Research</h1>
+      <p class="hero-lede" style="max-width: 720px;">
+        A workflow that takes a disease, a drug, or both — and produces a sourced, at-a-glance briefing in under 10 minutes. Built for the moments you need to walk into a meeting fluent.
+      </p>
+      <div class="tags">
+        <span class="tag">At a glance</span>
+        <span class="tag">Sourced</span>
+        <span class="tag">Print-ready</span>
+      </div>
+      <div class="hero-cta">
+        <a href="#try-it" class="btn btn-primary">Try it yourself</a>
+        <a href="/examples/repatha-ascvd-brief.html" target="_blank" class="btn btn-secondary">See an example brief →</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div style="max-width: 760px;">
+        <p style="font-size: 1.15rem;">
+          Ramping on a new therapy area takes time. This gets you up to speed in minutes — sourced, structured, ready to walk into a meeting with.
+        </p>
+
+        <div id="try-it" class="section-eyebrow" style="margin-top: 3.5rem;">Try it yourself</div>
+        <h2>Three steps. Two minutes to start.</h2>
+
+        <div class="phase">
+          <div class="phase-num">Step 01</div>
+          <h3>Get the engine prompt</h3>
+          <p>Download or copy <code>dd-engine.md</code> from the engine repo (link below).</p>
+        </div>
+
+        <div class="phase">
+          <div class="phase-num">Step 02</div>
+          <h3>Paste it into a fresh chat</h3>
+          <p>Use Claude or ChatGPT. Web search enabled is best — pulls the most current data.</p>
+        </div>
+
+        <div class="phase">
+          <div class="phase-num">Step 03</div>
+          <h3>Type a disease, drug, or both</h3>
+          <p>Examples: <code>NSCLC</code>, <code>Repatha</code>, <code>Keytruda in NSCLC</code>. Optionally append <code>commercial focus</code> or <code>medical-scientific focus</code>. The brief comes back immediately.</p>
+        </div>
+
+        <div style="border-left: 2px solid var(--accent); padding: 0.5rem 0 0.5rem 0.9rem; margin: 1.5rem 0 0.6rem;">
+          <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">
+            <span style="color: var(--accent); font-weight: 600;">💡 Where to run it —</span>
+            Best inside a tool that respects your data: Claude Enterprise or your firm's licensed deployment. Don't paste sensitive client material into consumer LLM products.
+          </p>
+        </div>
+
+        <div style="border-left: 2px solid var(--accent); padding: 0.5rem 0 0.5rem 0.9rem; margin: 0.6rem 0 1.5rem;">
+          <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">
+            <span style="color: var(--accent); font-weight: 600;">💡 Sharpen the output —</span>
+            Share past materials when you can: your firm's competitive intel, brand teams' analytics, recent ATU reads. With one or two real anchors the analysis gets noticeably sharper.
+          </p>
+        </div>
+
+        <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button type="button" class="btn btn-primary" data-engine-copy="/engines/dd-engine.md">Copy the engine prompt</button>
+          <a href="/engines/dd-engine.md" download class="btn btn-secondary">Or download the .md file</a>
+        </div>
+        <p style="margin-top: 0.8rem; font-size: 0.85rem; color: var(--text-muted);">
+          Copies the full prompt to your clipboard. Paste it into a fresh Claude or ChatGPT chat — the engine will greet you and ask for your input.
+        </p>
+
+        <div class="section-eyebrow" style="margin-top: 4rem;">What you'll experience</div>
+        <h2>One input. A sourced brief. In minutes.</h2>
+
+        <div class="phase">
+          <div class="phase-num">You type</div>
+          <h3>A disease, a drug, or both</h3>
+          <p>Examples: <code>NSCLC</code>, <code>Repatha</code>, <code>Keytruda in NSCLC</code>. The engine auto-detects the mode.</p>
+        </div>
+
+        <div class="phase">
+          <div class="phase-num">The engine works</div>
+          <h3>~10 minutes, single shot</h3>
+          <p>Pulls public sources (FDA labels, peer-reviewed journals, 10-Ks, society guidelines), structures the brief, flags confidence on every claim, and points to where you'd validate further.</p>
+        </div>
+
+        <div class="phase">
+          <div class="phase-num">You get</div>
+          <h3>A sourced, at-a-glance brief</h3>
+          <p>Card-based layout, sources cited inline. Print-ready HTML brief card when file tools are available — saves to PDF in two clicks.</p>
+        </div>
+
+        <div class="section-eyebrow" style="margin-top: 4rem;">Worked example</div>
+        <h2>Sample brief: Repatha in ASCVD.</h2>
+        <p>
+          A brief produced by the engine on a simple question: <em>where does Repatha sit in the ASCVD treatment landscape today?</em> Covers the snapshot, disease context, drug profile, performance, positioning vs. Praluent and Leqvio, payer dynamics, the recent + upcoming events calendar (including the August 2025 primary prevention label expansion the engine surfaced through research), and a final list of validation priorities to firm up before any meeting.
+        </p>
+        <p style="margin-top: 1.5rem;">
+          <a href="/examples/repatha-ascvd-brief.html" target="_blank" class="btn btn-primary">View the full example brief →</a>
+        </p>
+
+        <div class="section-eyebrow" style="margin-top: 4rem;">Design principles</div>
+
+        <div class="principle-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <div class="principle">
+            <h4>Easy to use</h4>
+            <p>Type a disease, drug, or both. The engine handles the rest. Three modes, one prompt — no jargon to learn.</p>
+          </div>
+          <div class="principle">
+            <h4>Easy to read</h4>
+            <p>Information lives in labeled cards, not dense paragraphs. Each card holds one focused topic. Glance through, find what you need, no plowing required.</p>
+          </div>
+          <div class="principle">
+            <h4>Easy to validate</h4>
+            <p>Every numerical claim gets a confidence flag (● ◐ ○) and a validation path. AI surfaces; you verify. The collaboration is what makes it credible.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="content" style="text-align: center; padding: 3rem 0 4rem;">
+      <h3 style="font-style: italic; font-size: 1.6rem;">Used it and liked what you saw?</h3>
+      <p class="muted" style="margin: 1.5rem auto; max-width: 560px;">
+        Curious how it landed for you. If you were able to create tailored templates for your therapy areas, integrate with internal data sources, or if it just sparked an idea, would love to know — let's chat.
+      </p>
+      <a href="mailto:raulkulkarni@gmail.com" class="btn btn-primary" style="margin-top: 1rem;">Start a conversation →</a>
+    </div>
+  </section>
+</BaseLayout>

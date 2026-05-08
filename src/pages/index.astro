@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WorkflowCard from '../components/WorkflowCard.astro';
+---
+
+<BaseLayout
+  title="Rapid AI for Healthcare"
+  description="A growing library of AI workflows for healthcare commercial — built and tested in public by a consultant who's lived inside the work."
+  activeNav="home"
+>
+  <section class="hero">
+    <div class="container">
+      <div class="status-badge">
+        Available · Next big role in healthcare + AI
+      </div>
+
+      <h1>
+        I build <span class="italic">applied AI</span><br />
+        for healthcare.
+      </h1>
+
+      <p class="hero-lede">
+        <strong>I'm Rahul Kulkarni.</strong> 10+ years scaling commercial work in healthcare. Most recently led a $5M portfolio with a 30-person global team.
+      </p>
+
+      <p class="hero-lede" style="margin-top: -0.6rem;">
+        This is a live library of AI applications for healthcare. Each one is an idea taken straight to implementation.
+      </p>
+
+      <p class="hero-lede" style="margin-top: -0.6rem; font-style: italic; color: var(--accent);">
+        Think fast. Act faster.
+      </p>
+
+      <div class="tags">
+        <span class="tag">Biopharma</span>
+        <span class="tag">Life Sciences Consulting</span>
+        <span class="tag">Digital Health</span>
+        <span class="tag">Data Science & Analytics</span>
+        <span class="tag">Strategy & Operations</span>
+      </div>
+
+      <div class="hero-cta">
+        <a href="/workflows" class="btn btn-primary">See the workflows →</a>
+        <a href="mailto:raulkulkarni@gmail.com" class="btn btn-secondary">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Currently live</div>
+        <h2>Two applications, live.</h2>
+        <p class="muted" style="max-width: 640px; font-size: 1.05rem;">
+          Built rapidly. Ready to act. Try them — they save real time.
+        </p>
+      </div>
+
+      <div class="workflow-grid">
+        <WorkflowCard
+          status="live"
+          title="Disease Research"
+          description="Learning about a new disease area or therapy; lots of scattered sources online? This engine brings publicly available research to your fingertips in under 10 minutes — confidence-flagged sources, paths to validate, and a print-ready brief for quick prep."
+          href="/workflows/disease-research"
+          meta={["At a glance", "Sourced", "Print-ready"]}
+        />
+        <WorkflowCard
+          status="live"
+          title="POV Generation"
+          description="Pulling through a working point of view to engage your stakeholders and bring them to a whiteboard? This engine takes a messy brief and produces a complete deck, memo, and long-form post in under 2 hours. Sharp, pharma-fluent."
+          href="/workflows/pov-generation"
+          meta={["Deck", "Memo", "Long-form"]}
+        />
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Next up</div>
+        <h2>What's coming</h2>
+        <p class="muted" style="max-width: 640px; font-size: 1.05rem;">
+          More in motion — analytics, interactive flows, reimagined storytelling, digital experience. Tell me what to build next.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="content" style="text-align: center; padding-top: 2rem; padding-bottom: 4rem;">
+      <h2 style="font-style: italic;">Want to see this applied to your work?</h2>
+      <p class="muted" style="max-width: 540px; margin: 0 auto 2rem;">
+        If something here sparked an idea, let's chat.
+      </p>
+      <a href="mailto:raulkulkarni@gmail.com" class="btn btn-primary">Start a conversation →</a>
+    </div>
+  </section>
+</BaseLayout>
