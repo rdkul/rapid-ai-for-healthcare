@@ -495,6 +495,16 @@ section.tight { padding: 2.5rem 0; }
   section { padding: 3rem 0; }
   .container, .content { padding: 0 1.4rem; }
   pre { font-size: 0.78rem; padding: 1rem; }
+
+  /* Footer: stack tagline above links, give them room to breathe */
+  .site-footer { margin-top: 4rem; padding: 2.5rem 0; }
+  .site-footer .container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.1rem;
+    font-size: 0.78rem;
+  }
+  .footer-links { gap: 1.4rem; }
 }
 
 @media (max-width: 560px) {
@@ -505,4 +515,10 @@ section.tight { padding: 2.5rem 0; }
   .nav-links { gap: 0.9rem; }
   .nav-links a { font-size: 0.7rem; letter-spacing: 0.03em; }
   .site-header .container { padding-top: 0.85rem; padding-bottom: 0.85rem; }
+
+  /* Footer: tighten further on narrow phones */
+  .site-footer { padding: 2rem 0; }
+  .site-footer .container { font-size: 0.74rem; gap: 0.9rem; }
+  .footer-links { gap: 1.2rem; }
+  .footer-links a { font-size: 0.74rem; }
 }
