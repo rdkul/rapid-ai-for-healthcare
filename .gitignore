@@ -24,3 +24,15 @@ pnpm-debug.log*
 
 # astro
 .astro/
+
+# macOS Finder metadata
+.DS_Store
+
+# Astro cache
+.astro/
+
+# macOS Finder metadata
+.DS_Store
+
+# Astro cache
+.astro/
